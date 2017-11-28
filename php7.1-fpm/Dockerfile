@@ -17,7 +17,7 @@ RUN chmod a+x /usr/local/bin/symfony
 RUN symfony --version
 
 # Install extensions
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo_mysql
 
 # Install xdebug
 RUN pecl install xdebug
