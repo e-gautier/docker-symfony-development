@@ -1,0 +1,42 @@
+# Symfony environment
+
+version: '3'
+
+services:
+  php-fpm:
+    container_name: php-fpm
+    build:
+      context: ./php7.1-fpm
+      args:
+        TIMEZONE: ${TIMEZONE}
+    env_file: .env
+    volumes:
+      - ~/Documents/workspace:/var/www
+    networks:
+      - default
+
+  nginx:
+    container_name: nginx
+    build: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./logs/nginx/:/var/log/nginx
+      - ~/Documents/workspace:/var/www
+    networks:
+      - default
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    env_file: .env
+    volumes:
+      - ./db:/var/lib/mysql
+
+#volumes:
+  #default:
+
+networks:
+  default:
+    driver: bridge
+
