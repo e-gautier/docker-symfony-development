@@ -19,6 +19,12 @@ down: ## docker-compose down
 install: all up ## make up and composer install.
 	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && composer install"
 
+require: all up ## Composer require.
+ifeq (${package},)
+	echo "Package is not defined, define with make <target> project=<project_root_name> package=<package>" && exit 1
+endif
+	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && composer require ${package}"
+
 new: all up ## make up, create a new Symfony project, install and edit hosts.
 	docker-compose exec -u www-data php-fpm bash -c "symfony new ${project} && cd ${project} && composer install"
 	pkexec bash -c "echo '127.0.0.1 ${project}.dev' >> /etc/hosts" && \
