@@ -1,22 +1,26 @@
+SHELL := /bin/bash
+.PHONY: help
+
 help:
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)""']]')"
 
-## Setup a Docker environment and a 1..n Symfony project(s).
-##
-##	make install project=helloworld
-##
-## Arguments:
-## 	- project: The project name, assuming it is the project root folder name.
 
-install:
-	docker-compose up -d && \
+all:
+ifeq (${project},)
+	echo "Argument project name is not defined, define with make <target> project=<project_root_name>" && exit 1
+endif
+
+up:
+	docker-compose up -d
+
+install: all up ## Setup Docker environment and install.
 	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && composer install"
 
-new:
-	docker-compose up -d && \
+new: all up ## Create a new Symfony project, setup Docker environement, install and edit hosts.
 	docker-compose exec -u www-data php-fpm bash -c "symfony new ${project} && cd ${project} && composer install"
+	pkexec bash -c "echo '127.0.0.1 ${project}.dev' >> /etc/hosts" && \
+	firefox -new-tab ${project}.dev || google-chrome ${project}.dev
 
-clean:
-	rm -rf logs; \
-	rm -rf db
+clean: all ## Remove the hosts entry.	
+	pkexec sed -i '/${project}.dev/d' /etc/hosts
 

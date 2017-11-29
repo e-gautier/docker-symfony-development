@@ -1,0 +1,24 @@
+server {
+
+  server_name localhost;
+  root  /var/www/phpinfo;
+
+  location / {
+    try_files $uri /phpinfo.php;
+  }
+
+  location ~ ^/(phpinfo)\.php(/|$) {
+    fastcgi_pass php-fpm:9000;
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+
+  location ~ \.php$ {
+    return 404;
+  }
+
+  error_log /var/log/nginx/phpinfo_error.log;
+  access_log /var/log/nginx/phpinfo_access.log;
+}
+
