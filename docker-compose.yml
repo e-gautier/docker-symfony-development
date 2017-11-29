@@ -21,7 +21,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./logs/nginx/:/var/log/nginx
+      - ./logs/nginx:/var/log/nginx
       - ~/Documents/workspace:/var/www
     networks:
       - default
@@ -30,8 +30,11 @@ services:
     container_name: mariadb
     image: mariadb
     env_file: .env
+    ports:
+      - 3306:3306
     volumes:
       - ./db:/var/lib/mysql
+      - ./logs/mariadb:/var/log/mysql
 
 #volumes:
   #default:
