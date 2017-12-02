@@ -1,4 +1,7 @@
-SHELL := /bin/bash
+SHELL:=/bin/bash
+DC=docker-compose
+CONSOLE=bin/console
+
 .PHONY: help
 
 help:
@@ -11,30 +14,30 @@ ifeq (${project},)
 endif
 
 up: ## docker-compose up
-	docker-compose up -d
+	${DC} up -d
 
 down: ## docker-compose down
-	docker-compose down
+	${DC} down
 
 install: all up ## make up and composer install.
-	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && composer install"
+	${DC} exec -u www-data php-fpm bash -c "cd ${project} && composer install"
 
 require: all up ## Composer require.
 ifeq (${package},)
 	echo "Package is not defined, define with make <target> project=<project_root_name> package=<package>" && exit 1
 endif
-	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && composer require ${package}"
+	${DC} exec -u www-data php-fpm bash -c "cd ${project} && composer require ${package}"
 
 new: all up ## make up, create a new Symfony project, install and edit hosts.
-	docker-compose exec -u www-data php-fpm bash -c "symfony new ${project} && cd ${project} && composer install"
+	${DC} exec -u www-data php-fpm bash -c "symfony new ${project} && cd ${project} && composer install"
 	pkexec bash -c "echo '127.0.0.1 ${project}.dev' >> /etc/hosts" && \
 	firefox -new-tab ${project}.dev || google-chrome ${project}.dev
 
 db-create: all up ## Create database
-	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && php bin/console doctrine:database:create"
+	${DC} exec -u www-data php-fpm bash -c "cd ${project} && php ${CONSOLE} doctrine:database:create"
 
 db-update: all up ## Update database (force)
-	docker-compose exec -u www-data php-fpm bash -c "cd ${project} && php bin/console doctrine:schema:update --force"
+	${DC} exec -u www-data php-fpm bash -c "cd ${project} && php ${CONSOLE} doctrine:schema:update --force"
 
 clean: all ## Remove the hosts entry.	
 	pkexec sed -i '/${project}.dev/d' /etc/hosts
