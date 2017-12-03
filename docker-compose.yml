@@ -36,8 +36,16 @@ services:
       - ./db:/var/lib/mysql
       - ./logs/mariadb:/var/log/mysql
 
-#volumes:
-  #default:
+  elk:
+    container_name: elk
+    image: willdurand/elk
+    ports:
+      - 81:80
+    volumes:
+      - ./elk/logstash:/etc/logstash
+      - ./elk/logstash/patterns:/opt/logstash/patterns
+      - ~/Documents/workspace:/var/www
+      - ./logs/nginx:/var/log/nginx
 
 networks:
   default:

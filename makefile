@@ -5,7 +5,7 @@ CONSOLE=bin/console
 .PHONY: help
 
 help:
-	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)""']]')"
+	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)"
 
 
 all:
@@ -18,6 +18,8 @@ up: ## docker-compose up
 
 down: ## docker-compose down
 	${DC} down
+
+restart: down up  ## down & up
 
 install: all up ## make up and composer install.
 	${DC} exec -u www-data php-fpm bash -c "cd ${project} && composer install"
