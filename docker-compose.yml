@@ -6,12 +6,12 @@ services:
   php-fpm:
     container_name: php-fpm
     build:
-      context: ./php7.1-fpm
+      context: ./php-fpm
       args:
         TIMEZONE: ${TIMEZONE}
     env_file: .env
     volumes:
-      - ~/Documents/workspace:/var/www
+      - ${WORKSPACE}:/var/www
     networks:
       - default
 
@@ -22,7 +22,6 @@ services:
       - 80:80
     volumes:
       - ./logs/nginx:/var/log/nginx
-      - ~/Documents/workspace:/var/www
     networks:
       - default
 
@@ -38,13 +37,15 @@ services:
 
   elk:
     container_name: elk
-    image: willdurand/elk
+    image: sebp/elk
     ports:
-      - 81:80
+      - 5601:5601
+      - 9200:9200
+      - 5044:5044
     volumes:
-      - ./elk/logstash:/etc/logstash
+      - ./elk/logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
       - ./elk/logstash/patterns:/opt/logstash/patterns
-      - ~/Documents/workspace:/var/www
+      - ${WORKSPACE}:/var/www
       - ./logs/nginx:/var/log/nginx
 
 networks:

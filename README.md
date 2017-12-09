@@ -1,7 +1,7 @@
 # docker-symfony-development
 [![Build Status](https://travis-ci.org/umbonia/docker-symfony-development.svg?branch=master)](https://travis-ci.org/umbonia/docker-symfony-development)
 
-Setup a Docker environment and a 1..n Symfony project(s).
+Setup a Docker environment and a 1..n Symfony ^3 project(s).
 ```
 curl -L https://git.io/vbLSV | bash
 ```
@@ -30,3 +30,10 @@ db-create  Create database
 db-update  Update database (force)
 clean      Remove the hosts entry.
 ```
+
+## ELK
+If elk is failing it probably needs more vm allocation (see [this link](https://www.elastic.co/guide/en/elasticsearch/reference/5.0/vm-max-map-count.html#vm-max-map-count))
+```
+sudo sysctl -w vm.max_map_count=262144 && sudo bash -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
+```
+

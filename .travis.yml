@@ -1,0 +1,12 @@
+sudo: enabled
+
+services:
+  - docker
+
+install:
+  - curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o docker-compose
+  - chmod +x docker-compose
+
+script:
+  - ./docker-compose up -d
+
