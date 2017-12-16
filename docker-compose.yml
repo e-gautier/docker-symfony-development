@@ -21,6 +21,8 @@ services:
     ports:
       - 80:80
     volumes:
+      - ${WORKSPACE}:/var/www
+      - ./nginx/default:/etc/nginx/sites-enabled/default
       - ./logs/nginx:/var/log/nginx
     networks:
       - default
