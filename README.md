@@ -1,5 +1,4 @@
 # docker-symfony-development
-[![Build Status](https://travis-ci.org/umbonia/docker-symfony-development.svg?branch=master)](https://travis-ci.org/umbonia/docker-symfony-development)
 
 Setup a Docker environment and a 1..n Symfony ^3 project(s).
 ```
